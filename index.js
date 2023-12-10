@@ -13,9 +13,17 @@ const openai = new OpenAI({
 app.use(cors());
 
 app.get("/generateCompletion", async (req, res) => {
+  console.log("ENDPOINT HIT")
   try {
+    // Extract parameters from the request
+    const { name, email, dob, tob, location, today } = req.query;
+    console.log(name, " ", email, " ", dob, " ", tob, " ", location)
+    // Construct the message content based on the received parameters
+    const messageContent = `Act as a professional astrologer and give a daily astrology reading for ${name}, born on ${dob} at ${tob} in ${location}. Todays date is ${today}. Return the reading in markdown format.`;
+
+    // Make the OpenAI API request
     const completion = await openai.chat.completions.create({
-      messages: [{ role: "system", content: "Act as a professional astrologer and give an astrology reading for someone born on the 7th of July 1963 in Portland, England at 1am" }],
+      messages: [{ role: "system", content: messageContent }],
       model: "gpt-3.5-turbo",
     });
 
